@@ -4,27 +4,57 @@ let kitchenItemslist = document.getElementById("kitchen-items-list");
 
 // step 2
 // add kitchen items
-function addKitchenItems() {
-  let kitchenInputData = kitchenInput.value;
-  // Create DOM elements now
-  let li = document.createElement("li");
+let kitchenInputData;
+let kitchenInputDataArray = [];
 
-  let spanEl = document.createElement("span");
-  li.appendChild(spanEl);
-  spanEl.innerText = kitchenInputData;
+function setLocalStorage() {
+  localStorage.setItem("KitchenInput", JSON.stringify(kitchenInputDataArray));
+}
 
-  li.style.cssText = "animation-name: slideIn;";
-  kitchenItemslist.appendChild(li);
-  kitchenInput.value = "";
-  kitchenInput.focus();
-  // Create trash butoon
-  let trashBtn = document.createElement("i");
-  trashBtn.classList.add("fa", "fa-trash");
-  li.appendChild(trashBtn);
+function getLocalStorage() {
+  if (localStorage.getItem("KitchenInput")) {
+    kitchenInputDataArray = JSON.parse(localStorage.getItem("KitchenInput"));
+    buildUI();
+  }
+}
 
-  let editBtn = document.createElement("i");
-  editBtn.classList.add("fas", "fa-edit");
-  li.appendChild(editBtn);
+function buildUI() {
+  kitchenItemslist.textContent = "";
+  kitchenInputDataArray.forEach((item) => {
+    // Create DOM elements now
+    let li = document.createElement("li");
+
+    let spanEl = document.createElement("span");
+    li.appendChild(spanEl);
+    spanEl.innerText = item;
+
+    li.style.cssText = "animation-name: slideIn;";
+    kitchenItemslist.appendChild(li);
+    kitchenInput.value = "";
+    kitchenInput.focus();
+    // Create trash butoon
+    let trashBtn = document.createElement("i");
+    trashBtn.classList.add("fa", "fa-trash");
+    li.appendChild(trashBtn);
+
+    let editBtn = document.createElement("i");
+    editBtn.classList.add("fas", "fa-edit");
+    li.appendChild(editBtn);
+  })
+
+
+}
+
+function addKitchenItems(event) {
+  kitchenInputData = kitchenInput.value;
+
+  kitchenInputDataArray.push(kitchenInputData);
+
+
+  setLocalStorage()
+
+  getLocalStorage()
+
 }
 
 // Delete item from kitchen list
@@ -41,13 +71,13 @@ function deleteKitchenItem(event) {
 
 // Edit Kitchen Item
 function editKitchenItem(event) {
-    if (event.target.classList[1] === "fa-edit") {  // event.target is "i"
-      let editValue = prompt("Please add new text");
-      let item = event.target.parentElement;
-      let spanEl = item.querySelector("span");
-      spanEl.innerText = editValue;
-      console.log(spanEl);
-    }
+  if (event.target.classList[1] === "fa-edit") {  // event.target is "i"
+    let editValue = prompt("Please add new text");
+    let item = event.target.parentElement;
+    let spanEl = item.querySelector("span");
+    spanEl.innerText = editValue;
+    console.log(spanEl);
+  }
 }
 
 // Enter key for add items
@@ -67,3 +97,4 @@ addBtn.addEventListener("click", addKitchenItems);
 kitchenItemslist.addEventListener("click", deleteKitchenItem);
 kitchenItemslist.addEventListener("click", editKitchenItem);
 
+getLocalStorage();
