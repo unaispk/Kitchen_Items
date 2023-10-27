@@ -64,8 +64,18 @@ function deleteKitchenItem(event) {
     item.classList.add("slideOut");
     item.addEventListener("transitionend", function () {
       item.remove();
+
+      //-----------------------
+      const itemText = item.querySelector("span").innerText;
+      kitchenInputDataArray = kitchenInputDataArray.filter((value) => value !== itemText);
+      setLocalStorage();
+
+      // Check if there are no items left, then clear local storage
+      if (kitchenInputDataArray.length === 0) {
+        localStorage.removeItem("KitchenInput");
+        //-----------------------
+      }
     })
-    // item.remove();
   }
 }
 
